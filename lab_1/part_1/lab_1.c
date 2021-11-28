@@ -16,7 +16,7 @@ void print_array(int* arr, int size)
 
 void read_number_from_file_and_write_to_array(FILE* f, int *arr, int size)
 {
-    f = fopen("data.txt", "r");
+    f = fopen("../data.txt", "r");
     for(int i = 0; i < size; i++)
         fscanf(f, "%d", &arr[i]);
     fclose(f);
