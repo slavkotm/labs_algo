@@ -1,38 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int SIZE = 1000000;
+//размер массива
+int SIZE = 1000000; 
 
-void delete_array(int* arr)
+//фунцкия для освобождения памяти
+void delete_array(int* arr) 
 {
+    //сама функция освобождения памяти
     free(arr);
 }
 
+//функция для печати массива в консоль
 void print_array(int* arr, int size)
 {
+    //цикл для печати массива
     for(int i = 0; i < size; i++)
         printf("%d\n", arr[i]);
 }
 
+//функция для чтения чисел из файла в массив
 void read_number_from_file_and_write_to_array(FILE* f, int *arr, int size)
 {
+    //открытие файла на чтение
     f = fopen("../data.txt", "r");
     for(int i = 0; i < size; i++)
         fscanf(f, "%d", &arr[i]);
+    //закрыть файл после чтения
     fclose(f);
     f = NULL;
 }
 
+//функция для записи массива в файл
 void write_array_in_file(FILE* f, int *arr, int size) {
     
+    //открытие файла для записи
     f = fopen("out.txt", "w");
     for(int i = 0; i < size; i++) {
         fprintf(f, "%d\n", arr[i]);
     }
+    //закрыть файл после записи
     fclose(f);
     f = NULL;
 }
 
+//функция для размещения элементов массива меньших опорного элемента этого же массива
 int partition(int* arr, int low, int high) {
     int pivot = arr[high];
     int i = low;
@@ -50,6 +62,7 @@ int partition(int* arr, int low, int high) {
     return i;
 }
 
+//функция быстрой сортировки, которая работает рекурсивно
 void quick_sort(int *arr, int low, int high) {
     if(low < high) {
         int p = partition(arr, low, high);
@@ -58,6 +71,7 @@ void quick_sort(int *arr, int low, int high) {
     }
 }
 
+//сортировка вставками
 void insert_sort(int* arr, int low, int high) {
     int i, key, j;
     for(i = low + 1; i < high; i++) {
@@ -71,6 +85,7 @@ void insert_sort(int* arr, int low, int high) {
     }
 }
 
+//функция для слияния подмассивов в конечный массив
 void merge(int* arr, int mid, int left, int right) {
     int i, j, k;
     int length_left_array = mid - left + 1;
@@ -113,6 +128,7 @@ void merge(int* arr, int mid, int left, int right) {
     }
 }
 
+//сортировка слиянием
 void merge_sort(int* arr, int left, int right) {
     if(left < right) {
         int mid = left + (right - left) / 2;
@@ -123,6 +139,7 @@ void merge_sort(int* arr, int left, int right) {
     }
 }
 
+//смешанная сортировка слиянием и вставками
 void mix_insert_merge_sort(int* arr, int left, int right, int k) {
     if(left < right) {
         int mid = left + (right - left) / 2;
@@ -143,6 +160,7 @@ void mix_insert_merge_sort(int* arr, int left, int right, int k) {
     }
 }
 
+//функция для выбора вида сортировки
 void sorts(int* arr, int SIZE, int sort_type, int k) {
     if(sort_type == 1) {
         merge_sort(arr, 0, SIZE - 1);
@@ -157,13 +175,17 @@ void sorts(int* arr, int SIZE, int sort_type, int k) {
     }
 }
 
+//главный метод
 int main(int argc, char* argv[])
 {
+    //выделение памяти под массив
     int* arr = malloc(SIZE * sizeof(int));
     FILE *f = NULL;
     read_number_from_file_and_write_to_array(f, arr, SIZE);
     sorts(arr, SIZE, 3, 1000);
     write_array_in_file(f, arr, SIZE);
+    //очистка памяти от массива
     delete_array(arr);
+    arr = NULL;
     return 0;
 }
