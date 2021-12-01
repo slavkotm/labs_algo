@@ -48,14 +48,26 @@ int search_binary(int* arr, int low, int high, int need_element) {
         need_position = mid;
         quit = 0;
     }
+    else {
+        need_position = -1;
+        quit = 0;
+    }
 
     if(need_element == arr[low]) {
         need_position = low;
         quit = 0;
     }
+    else {
+        need_position = -1;
+        quit = 0;
+    }
 
     if(need_element == arr[high]) {
         need_position = high;
+        quit = 0;
+    }
+    else {
+        need_position = -1;
         quit = 0;
     }
 
@@ -68,7 +80,9 @@ int search_binary(int* arr, int low, int high, int need_element) {
     return need_position;
 }
 
-int search_interpolar() {
+//функция для поиска элемента в массиве(интерполяционный поиск)
+int search_interpolar(int* arr, int size, int need_element) {
+
     return 0;
 }
 
@@ -80,8 +94,7 @@ int main(int argc, char* argv[])
     FILE *f = NULL;
     int ar[] = {-12,-5,-3,-1,0,3,4,6,9,13};
     read_number_from_file_and_write_to_array(f, arr, SIZE);
-    write_array_in_file(f, arr, SIZE);
-    printf("%d\n",search_binary(ar, 0, 10 - 1, 13));
+    printf("%d\n",search_binary(ar, 0, 10 - 1, 12));
     //удалние массива из памяти
     delete_array(arr);
     return 0;
