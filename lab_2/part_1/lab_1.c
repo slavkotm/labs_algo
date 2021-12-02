@@ -39,51 +39,72 @@ void write_array_in_file(FILE* f, int *arr, int size) {
 }
 
 //функция для поиска элемента в массиве(бинарный поиск)
-int search_binary(int* arr, int low, int high, int need_element) {
+int search_binary(int* arr, int low, int high, int need_element, int* count_compare_in_binary_search) {
+    if(need_element < arr[low] || need_element > arr[high]) {
+        (*count_compare_in_binary_search)++;
+        return -1;
+    }
+
     int mid = (high + low) / 2;
     int quit = 1; 
-    int need_position;
+    int need_position = -1;
 
-    if(need_element == arr[mid]) {
+    if(need_element == arr[mid] && quit) {
         need_position = mid;
         quit = 0;
-    }
-    else {
-        need_position = -1;
-        quit = 0;
+        (*count_compare_in_binary_search)++;
     }
 
-    if(need_element == arr[low]) {
+    if(need_element == arr[low] && quit) {
         need_position = low;
         quit = 0;
-    }
-    else {
-        need_position = -1;
-        quit = 0;
+        (*count_compare_in_binary_search)++;
     }
 
-    if(need_element == arr[high]) {
+    if(need_element == arr[high] && quit) {
         need_position = high;
         quit = 0;
-    }
-    else {
-        need_position = -1;
-        quit = 0;
+        (*count_compare_in_binary_search)++;
     }
 
-    if(need_element < arr[mid] && quit)
-        return search_binary(arr, low, mid + 1, need_element);
+    if(need_element < arr[mid] && quit) {
+        (*count_compare_in_binary_search)++;
+        return search_binary(arr, low, mid + 1, need_element, count_compare_in_binary_search);
+    }
 
-    if(need_element > arr[mid] && quit)
-        return search_binary(arr, mid + 1, high, need_element);
+    if(need_element > arr[mid] && quit) {
+        (*count_compare_in_binary_search)++;
+        return search_binary(arr, mid + 1, high, need_element, count_compare_in_binary_search);
+    }
 
     return need_position;
 }
 
 //функция для поиска элемента в массиве(интерполяционный поиск)
-int search_interpolar(int* arr, int size, int need_element) {
+int search_interpolar(int* arr, int low, int high, int need_element, int* count_compare_in_interpolar_search) {
+    int position;
 
-    return 0;
+    if(low <= high && need_element >= arr[low] && need_element <= arr[high]) {
+        (*count_compare_in_interpolar_search)++;
+        position = low + (((double)(high - low) /  (arr[high] - arr[low])) * (need_element - arr[low]));
+
+        if(arr[position] == need_element) {
+            (*count_compare_in_interpolar_search)++;
+            return position;
+        }
+
+        if(arr[position] < need_element) {
+            (*count_compare_in_interpolar_search)++;
+            return search_interpolar(arr, position + 1, high, need_element, count_compare_in_interpolar_search);
+        }
+
+        if(arr[position] < need_element) {
+            (*count_compare_in_interpolar_search)++;
+            return search_interpolar(arr, low, position - 1, need_element, count_compare_in_interpolar_search);
+        }
+    }
+
+    return -1;
 }
 
 //главный метод
@@ -91,10 +112,14 @@ int main(int argc, char* argv[])
 {
     //создание массива на SIZE элементов 
     int* arr = malloc(SIZE * sizeof(int));
+    int count_compare_in_binary_search = 0;
+    int count_compare_in_interpolar_search = 0;
     FILE *f = NULL;
     int ar[] = {-12,-5,-3,-1,0,3,4,6,9,13};
     read_number_from_file_and_write_to_array(f, arr, SIZE);
-    printf("%d\n",search_binary(ar, 0, 10 - 1, 12));
+    printf("%d\n", search_binary(ar, 0, 10 - 1, -1, &count_compare_in_binary_search));
+    printf("%d\n", search_interpolar(ar, 0, 10 - 1, -1, &count_compare_in_interpolar_search));
+    printf("%d, %d\n", count_compare_in_binary_search, count_compare_in_interpolar_search);
     //удалние массива из памяти
     delete_array(arr);
     return 0;
