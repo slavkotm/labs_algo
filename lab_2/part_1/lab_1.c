@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
     read_number_from_file_and_write_to_array(f, arr, SIZE);
     printf("%d\n", search_binary(ar, 0, 10 - 1, -1, &count_compare_in_binary_search));
     printf("%d\n", search_interpolar(ar, 0, 10 - 1, -1, &count_compare_in_interpolar_search));
-    printf("%d, %d\n", count_compare_in_binary_search, count_compare_in_interpolar_search);
+    printf("количество сравнений в бинарном поиске: %d, количество сравнений в интерполяционном поиске: %d\n", count_compare_in_binary_search, count_compare_in_interpolar_search);
     //удалние массива из памяти
     delete_array(arr);
     return 0;
