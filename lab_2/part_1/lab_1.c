@@ -115,10 +115,10 @@ int main(int argc, char* argv[])
     int count_compare_in_binary_search = 0;
     int count_compare_in_interpolar_search = 0;
     FILE *f = NULL;
-    int ar[] = {-12,-5,-3,-1,0,3,4,6,9,13};
+    int ar[] = {-12,-15,-3,-1,10,3,4,16,19,13};
     read_number_from_file_and_write_to_array(f, arr, SIZE);
-    printf("%d\n", search_binary(ar, 0, 10 - 1, -1, &count_compare_in_binary_search));
-    printf("%d\n", search_interpolar(ar, 0, 10 - 1, -1, &count_compare_in_interpolar_search));
+    printf("%d\n", search_binary(ar, 0, 10 - 1, 10, &count_compare_in_binary_search));
+    printf("%d\n", search_interpolar(ar, 0, 10 - 1, 10, &count_compare_in_interpolar_search));
     printf("количество сравнений в бинарном поиске: %d, количество сравнений в интерполяционном поиске: %d\n", count_compare_in_binary_search, count_compare_in_interpolar_search);
     //удалние массива из памяти
     delete_array(arr);
