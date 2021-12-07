@@ -129,7 +129,7 @@ node* rot_left(node *root) {
     return tmp_root;
 }
 
-//функция для перемещения выбранного узла в корень дерева
+//функция для перемещения выбранного из правого дерева узла в корень дерева
 node *part_tree_right(node *root, int size_tree) {
     if (root->left != NULL) {
         int tmp_size_tree = root->left->size_tree;
@@ -147,6 +147,7 @@ node *part_tree_right(node *root, int size_tree) {
     return root;
 }
 
+//функция для перемещения выбранного из левого дерева узла в корень дерева
 node *part_tree_left(node *root, int size_tree) {
     if (root->right != NULL) {
         int tmp_size_tree = root->right->size_tree;
@@ -163,7 +164,7 @@ node *part_tree_left(node *root, int size_tree) {
     }
     return root;
 }
-//рекурсивная функция для балансировки всех дерева и его поддеревьев
+//рекурсивная функция балансировки правого дерева
 node *balance_tree_right(node *root) {
     if (root != NULL) {
         if (root->size_tree < 2) 
@@ -175,6 +176,7 @@ node *balance_tree_right(node *root) {
     return root;
 }
 
+//рекурсивная функция балансировки левого дерева
 node *balance_tree_left(node *root) {
     if (root != NULL) {
         if (root->size_tree < 2) 
@@ -218,6 +220,7 @@ void count_knot_of_all_trees(node *root) {
     }
 }
 
+//функция удаления узла по значению
 node *search_delete_element(node *root) {
     node *tmp_right = root, *tmp_left = NULL;
 
@@ -234,6 +237,7 @@ node *search_delete_element(node *root) {
     return tmp_left;
 }
 
+//функция удаления узла по значению
 node *delete_tree_value(node *root, int data) {
     node *tmp_left = NULL, *tmp_mid = NULL;
 
@@ -279,6 +283,7 @@ node *delete_tree_value(node *root, int data) {
     return root;
 }
 
+//функция удаления дерева
 void delete_tree(node *root, int *arr, int size) {
     for (int i = size - 1; i >= 0; i--)
         delete_tree_value(root, arr[i]);
