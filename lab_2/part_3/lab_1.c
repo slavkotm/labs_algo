@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int SIZE = 100;
+int SIZE = 15;
 
 typedef struct knot {
     int data;
@@ -151,7 +151,6 @@ under_node *hash_chain(under_node *list, int *arr, int *unique_arr, int size, in
     for (int i = 1; i < unique_arr_size; i++) {
         add_element_to_general_list(list, unique_arr[i]);
     }
-    print_general_list(list);
     under_node *tmp_list = list;
     for (int i = 0; i < count_element_general_list(list); i++) {
         for (int j = 0; j < size; j++) {
@@ -164,63 +163,76 @@ under_node *hash_chain(under_node *list, int *arr, int *unique_arr, int size, in
     return list;
 }
 
-int main(int argc, char* argv[]) {
-    under_node *list = NULL;
-    int *arr = malloc(SIZE * sizeof(int));
-    int *any_arr = malloc(SIZE * sizeof(int));
-    int new_size = 0, k = 0, f = 0;// check_for_unique = 0, j = 0;
-    for (int i = 0; i < SIZE; i++) {
-        arr[i] = rand() % SIZE + SIZE / pow(SIZE, 2);
-    }
-    for (int i = 0; i < SIZE; i++) {
-        printf("%d %d\n", hash_function(arr[i]), arr[i]);
-    }
-    for (int i = 0; i < SIZE; i++) {
-        any_arr[i] = arr[i];
-    }
-    for (int i = 0; i < SIZE; i++) {
-        arr[i] = hash_function(arr[i]);
-    }
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = i; j < SIZE; j++) {
-            if (arr[i] == arr[j] && i != j) {
-                new_size++;
+int *unique_hashes(int* arr, int size, int *size_last_arr) {
+    int size_new_arr = 0, k = 0, f = 0;
+    int *tmp_arr = malloc(size * sizeof(int));
+
+    for (int i = 0; i < size; i++)
+        tmp_arr[i] = hash_function(arr[i]);
+    
+    for (int i = 0; i < size; i++) {
+        for (int j = i; j < size; j++) {
+            if (tmp_arr[i] == tmp_arr[j] && i != j) {
+                size_new_arr++;
                 break;
             }
         }
     }
-    int *ar = malloc(new_size * sizeof(int));
-    printf("\n");
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = i; j < SIZE; j++) {
-            if (arr[i] == arr[j] && i != j) {
-                ar[k] = j;
+    
+    int *last_arr = malloc((size - size_new_arr) * sizeof(int));
+
+    int *arr_of_index = malloc(size_new_arr * sizeof(int));
+    for (int i = 0; i < size; i++) {
+        for (int j = i; j < size; j++) {
+            if (tmp_arr[i] == tmp_arr[j] && i != j) {
+                arr_of_index[k] = j;
                 k++;
                 break;
             }
         }
     }
-    int *a = malloc((SIZE - new_size) * sizeof(int));
-    insert_sort(ar, 0, new_size);
+
+    insert_sort(arr_of_index, 0, size_new_arr);
+
     k = 0;
-    for (int i = 0; i < SIZE; i++) {
-        if (ar[k] == i) {
+
+    for (int i = 0; i < size; i++) {
+        if (arr_of_index[k] == i) {
             k++;
             continue;
         }
         else {
-            a[f] = arr[i];
+            last_arr[f] = tmp_arr[i];
             f++;
         }
     }
+    
+    *(size_last_arr) = size - size_new_arr;
 
-    for (int i = 0; i < SIZE - new_size; i++) {
-        printf("%d\n", a[i]);
+    free(arr_of_index);
+    free(tmp_arr);
+
+    return last_arr;
+}
+
+int main(int argc, char* argv[]) {
+    under_node *list = NULL;
+    int *arr = malloc(SIZE * sizeof(int));
+    int *hash_arr = NULL;
+    int size_hash_arr = 0;
+
+    for (int i = 0; i < SIZE; i++) {
+        arr[i] = rand() % SIZE + SIZE / pow(SIZE, 2);
     }
+    
+    hash_arr = unique_hashes(arr, SIZE, &size_hash_arr);
+
+    for (int i = 0; i < SIZE; i++)
+        printf("hash: %d key: %d\n", hash_function(arr[i]), arr[i]);
     printf("\n");
-    list = hash_chain(list, any_arr, a, SIZE, SIZE - new_size);
-    //printf("%d\n", new_size);
+    list = hash_chain(list, arr, hash_arr, SIZE, size_hash_arr);
     print_together_lists(list);
+    free(hash_arr);
     free(arr);
     return 0;
 }
