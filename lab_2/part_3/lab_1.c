@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct knot {
     int data;
@@ -102,12 +103,23 @@ void print_together_lists(under_node *list) {
         list = list->under;
         printf("\n");
     }
-    printf("%d\n", list->under_data);
+    printf("%d ", list->under_data);
     if (list->next != NULL) 
         while (list->next->next != NULL) {
             printf("%d ", list->next->data);
             list->next = list->next->next;
         }
+    printf("\n");
+}
+
+int hash_function(int key) {
+    int N = 10;
+    double A = 0.6180339887;
+    return N * fmod(key * A, 1);
+}
+
+void hash_chain(under_node *list) {
+     
 }
 
 int main(int argc, char* argv[]) {
@@ -118,6 +130,15 @@ int main(int argc, char* argv[]) {
     add_element_index_to_under_list(list, 2, 5);
     add_element_index_to_under_list(list, 2, 5);
     add_element_index_to_under_list(list, 2, 5);
+    add_element_index_to_under_list(list, 1, 5);
+    add_element_index_to_under_list(list, 1, 5);
+    add_element_index_to_under_list(list, 1, 5);
+    add_element_index_to_under_list(list, 0, 5);
+    add_element_index_to_under_list(list, 0, 5);
+    add_element_index_to_under_list(list, 0, 5);
+    add_element_index_to_under_list(list, 3, 5);
+    add_element_index_to_under_list(list, 3, 5);
+    add_element_index_to_under_list(list, 3, 5);
     //print_general_list(list);
     //print_under_list(list, 2);
     print_together_lists(list);
