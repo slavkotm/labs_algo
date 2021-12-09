@@ -4,34 +4,34 @@
 
 int SIZE = 15;
 
-typedef struct knot {
+typedef struct secondary_item {
     int data;
-    struct knot *next;
-} node;
+    struct secondary_item *secondary_next;
+} secondary_list;
 
-typedef struct under_knot {
+typedef struct primary_item {
     int under_data;
-    struct knot *next;
-    struct under_knot* under;
-} under_node;
+    struct secondary_item *secondary_next;
+    struct primary_item* primary_next;
+} primary_list;
 
-under_node *create_list(int data_of_array) {
-    under_node *first = malloc(sizeof(under_node));
+primary_list *create_list(int data_of_array) {
+    primary_list *first = malloc(sizeof(primary_list));
     first->under_data = data_of_array;
-    first->next = NULL;
-    first->under = NULL;
+    first->secondary_next = NULL;
+    first->primary_next = NULL;
     return first;
 }
 
-under_node *add_element_to_general_list(under_node* list, int data_of_array) {
-    under_node *last = list;
-    while (last->under != NULL)
-        last = last->under;
-    under_node *tmp_node = malloc(sizeof(under_node));
+primary_list *add_element_to_general_list(primary_list* list, int data_of_array) {
+    primary_list *last = list;
+    while (last->primary_next != NULL)
+        last = last->primary_next;
+    primary_list *tmp_node = malloc(sizeof(primary_list));
     tmp_node->under_data = data_of_array;
-    tmp_node->next = NULL;
-    tmp_node->under = NULL;
-    last->under = tmp_node;
+    tmp_node->secondary_next = NULL;
+    tmp_node->primary_next = NULL;
+    last->primary_next = tmp_node;
     return list;
 }
 
@@ -48,37 +48,37 @@ void insert_sort(int* arr, int low, int high) {
     }
 }
 
-int count_element_general_list(under_node *list) {
+int count_element_general_list(primary_list *list) {
     int count = 0;
-    while (list->under != NULL) {
+    while (list->primary_next != NULL) {
         count++;
-        list = list->under;
+        list = list->primary_next;
     }
     count++;
     return count;
 }
 
-under_node *add_element_index_to_under_list(under_node* general_list, int index, int data_of_array) {
+primary_list *add_element_index_to_under_list(primary_list* general_list, int index, int data_of_array) {
     if (index <= count_element_general_list(general_list)) {
         int count = 0;
         while (count < index) {
             count++;
-            general_list = general_list->under;
+            general_list = general_list->primary_next;
         }
-        if (general_list->next == NULL) {
-            general_list->next = malloc(sizeof(node));
-            general_list->next->data = data_of_array;
-            general_list->next->next = NULL;
+        if (general_list->secondary_next == NULL) {
+            general_list->secondary_next = malloc(sizeof(secondary_list));
+            general_list->secondary_next->data = data_of_array;
+            general_list->secondary_next->secondary_next = NULL;
             return general_list;
         }
-        else if (general_list->next != NULL) {
-            node *last = general_list->next;
-            while (last->next != NULL)
-                last = last->next;
-            node *tmp_node = malloc(sizeof(node));
+        else if (general_list->secondary_next != NULL) {
+            secondary_list *last = general_list->secondary_next;
+            while (last->secondary_next != NULL)
+                last = last->secondary_next;
+            secondary_list *tmp_node = malloc(sizeof(secondary_list));
             tmp_node->data = data_of_array;
-            tmp_node->next = NULL;
-            last->next = tmp_node;
+            tmp_node->secondary_next = NULL;
+            last->secondary_next = tmp_node;
         }
     }
     else { 
@@ -88,52 +88,52 @@ under_node *add_element_index_to_under_list(under_node* general_list, int index,
     return general_list;
 }
 
-void print_general_list(under_node* list) {
+void print_general_list(primary_list* list) {
     if (list == NULL)
         return;
-    while (list->under != NULL) {
+    while (list->primary_next != NULL) {
         printf("%d\n", list->under_data);
-        list = list->under;
+        list = list->primary_next;
     }
     printf("%d\n", list->under_data);
 }
 
-void print_under_list(under_node* list, int index) {
+void print_under_list(primary_list* list, int index) {
     if (list == NULL)
         return;
     int count = 0;
     while (count < index) {
         count++;
-        list = list->under;
+        list = list->primary_next;
     }
-    while (list->next->next != NULL) {
-        printf("%d\n", list->next->data);
-        list->next = list->next->next;
+    while (list->secondary_next->secondary_next != NULL) {
+        printf("%d\n", list->secondary_next->data);
+        list->secondary_next = list->secondary_next->secondary_next;
     }
 }
 
-void print_together_lists(under_node *list) {
+void print_together_lists(primary_list *list) {
     if (list == NULL)
         return;
-    while (list->under != NULL) {
+    while (list->primary_next != NULL) {
         printf("%d { ", list->under_data);
-        if (list->next != NULL) { 
-            while (list->next->next != NULL) {
-                printf("%d ", list->next->data);
-                list->next = list->next->next;
+        if (list->secondary_next != NULL) { 
+            while (list->secondary_next->secondary_next != NULL) {
+                printf("%d ", list->secondary_next->data);
+                list->secondary_next = list->secondary_next->secondary_next;
             }
-            printf("%d }", list->next->data);
+            printf("%d }", list->secondary_next->data);
         }
-        list = list->under;
+        list = list->primary_next;
         printf("\n");
     }
     printf("%d { ", list->under_data);
-    if (list->next != NULL) {
-        while (list->next->next != NULL) {
-            printf("%d ", list->next->data);
-            list->next = list->next->next;
+    if (list->secondary_next != NULL) {
+        while (list->secondary_next->secondary_next != NULL) {
+            printf("%d ", list->secondary_next->data);
+            list->secondary_next = list->secondary_next->secondary_next;
         }
-        printf("%d }", list->next->data);
+        printf("%d }", list->secondary_next->data);
     }
     printf("\n");
 }
@@ -144,21 +144,21 @@ int hash_function(int key) {
     return N * fmod(key * A, 1);
 }
 
-under_node *hash_chain(under_node *list, int *arr, int *unique_arr, int size, int unique_arr_size) {
+primary_list *hash_chain(primary_list *list, int *arr, int *unique_arr, int size, int unique_arr_size) {
     if (list == NULL)
         list = create_list(unique_arr[0]);
 
     for (int i = 1; i < unique_arr_size; i++) {
         add_element_to_general_list(list, unique_arr[i]);
     }
-    under_node *tmp_list = list;
+    primary_list *tmp_list = list;
     for (int i = 0; i < count_element_general_list(list); i++) {
         for (int j = 0; j < size; j++) {
             if (tmp_list->under_data == hash_function(arr[j])) {
                 add_element_index_to_under_list(list, i, arr[j]);
             }
         }
-        tmp_list = tmp_list->under;
+        tmp_list = tmp_list->primary_next;
     }
     return list;
 }
@@ -215,21 +215,19 @@ int *unique_hashes(int* arr, int size, int *size_last_arr) {
     return last_arr;
 }
 
+int extra_hash_function(int key) {
+    return (key % SIZE);
+}
+
 int main(int argc, char* argv[]) {
-    under_node *list = NULL;
+    primary_list *list = NULL;
     int *arr = malloc(SIZE * sizeof(int));
     int *hash_arr = NULL;
     int size_hash_arr = 0;
-
     for (int i = 0; i < SIZE; i++) {
         arr[i] = rand() % SIZE + SIZE / pow(SIZE, 2);
     }
-    
     hash_arr = unique_hashes(arr, SIZE, &size_hash_arr);
-
-    for (int i = 0; i < SIZE; i++)
-        printf("hash: %d key: %d\n", hash_function(arr[i]), arr[i]);
-    printf("\n");
     list = hash_chain(list, arr, hash_arr, SIZE, size_hash_arr);
     print_together_lists(list);
     free(hash_arr);
