@@ -5,19 +5,19 @@
 int SIZE = 15;
 
 typedef struct secondary_item {
-    int data;
+    int secondary_data;
     struct secondary_item *secondary_next;
 } secondary_list;
 
 typedef struct primary_item {
-    int under_data;
+    int primary_data;
     struct secondary_item *secondary_next;
     struct primary_item* primary_next;
 } primary_list;
 
 primary_list *create_list(int data_of_array) {
     primary_list *first = malloc(sizeof(primary_list));
-    first->under_data = data_of_array;
+    first->primary_data = data_of_array;
     first->secondary_next = NULL;
     first->primary_next = NULL;
     return first;
@@ -28,7 +28,7 @@ primary_list *add_element_to_general_list(primary_list* list, int data_of_array)
     while (last->primary_next != NULL)
         last = last->primary_next;
     primary_list *tmp_node = malloc(sizeof(primary_list));
-    tmp_node->under_data = data_of_array;
+    tmp_node->primary_data = data_of_array;
     tmp_node->secondary_next = NULL;
     tmp_node->primary_next = NULL;
     last->primary_next = tmp_node;
@@ -67,7 +67,7 @@ primary_list *add_element_index_to_under_list(primary_list* general_list, int in
         }
         if (general_list->secondary_next == NULL) {
             general_list->secondary_next = malloc(sizeof(secondary_list));
-            general_list->secondary_next->data = data_of_array;
+            general_list->secondary_next->secondary_data = data_of_array;
             general_list->secondary_next->secondary_next = NULL;
             return general_list;
         }
@@ -76,7 +76,7 @@ primary_list *add_element_index_to_under_list(primary_list* general_list, int in
             while (last->secondary_next != NULL)
                 last = last->secondary_next;
             secondary_list *tmp_node = malloc(sizeof(secondary_list));
-            tmp_node->data = data_of_array;
+            tmp_node->secondary_data = data_of_array;
             tmp_node->secondary_next = NULL;
             last->secondary_next = tmp_node;
         }
@@ -92,10 +92,10 @@ void print_general_list(primary_list* list) {
     if (list == NULL)
         return;
     while (list->primary_next != NULL) {
-        printf("%d\n", list->under_data);
+        printf("%d\n", list->primary_data);
         list = list->primary_next;
     }
-    printf("%d\n", list->under_data);
+    printf("%d\n", list->primary_data);
 }
 
 void print_under_list(primary_list* list, int index) {
@@ -107,7 +107,7 @@ void print_under_list(primary_list* list, int index) {
         list = list->primary_next;
     }
     while (list->secondary_next->secondary_next != NULL) {
-        printf("%d\n", list->secondary_next->data);
+        printf("%d\n", list->secondary_next->secondary_data);
         list->secondary_next = list->secondary_next->secondary_next;
     }
 }
@@ -116,24 +116,24 @@ void print_together_lists(primary_list *list) {
     if (list == NULL)
         return;
     while (list->primary_next != NULL) {
-        printf("%d { ", list->under_data);
+        printf("%d { ", list->primary_data);
         if (list->secondary_next != NULL) { 
             while (list->secondary_next->secondary_next != NULL) {
-                printf("%d ", list->secondary_next->data);
+                printf("%d ", list->secondary_next->secondary_data);
                 list->secondary_next = list->secondary_next->secondary_next;
             }
-            printf("%d }", list->secondary_next->data);
+            printf("%d }", list->secondary_next->secondary_data);
         }
         list = list->primary_next;
         printf("\n");
     }
-    printf("%d { ", list->under_data);
+    printf("%d { ", list->primary_data);
     if (list->secondary_next != NULL) {
         while (list->secondary_next->secondary_next != NULL) {
-            printf("%d ", list->secondary_next->data);
+            printf("%d ", list->secondary_next->secondary_data);
             list->secondary_next = list->secondary_next->secondary_next;
         }
-        printf("%d }", list->secondary_next->data);
+        printf("%d }", list->secondary_next->secondary_data);
     }
     printf("\n");
 }
@@ -154,7 +154,7 @@ primary_list *hash_chain(primary_list *list, int *arr, int *unique_arr, int size
     primary_list *tmp_list = list;
     for (int i = 0; i < count_element_general_list(list); i++) {
         for (int j = 0; j < size; j++) {
-            if (tmp_list->under_data == hash_function(arr[j])) {
+            if (tmp_list->primary_data == hash_function(arr[j])) {
                 add_element_index_to_under_list(list, i, arr[j]);
             }
         }
