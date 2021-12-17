@@ -2,19 +2,23 @@
 #include <stdlib.h>
 #include <math.h>
 
+// размер хеш таблицы
 int SIZE = 15;
 
+// создание структуры подсписка
 typedef struct secondary_item {
     int secondary_data;
     struct secondary_item *secondary_next;
 } secondary_list;
 
+// создание структуры списка
 typedef struct primary_item {
     int primary_data;
     struct secondary_item *secondary_next;
     struct primary_item* primary_next;
 } primary_list;
 
+// функция создания списка
 primary_list *create_list(int data_of_array) {
     primary_list *first = malloc(sizeof(primary_list));
     first->primary_data = data_of_array;
@@ -23,6 +27,7 @@ primary_list *create_list(int data_of_array) {
     return first;
 }
 
+// функция добавления элемента в список
 primary_list *add_element_to_general_list(primary_list* list, int data_of_array) {
     primary_list *last = list;
     while (last->primary_next != NULL)
@@ -35,6 +40,7 @@ primary_list *add_element_to_general_list(primary_list* list, int data_of_array)
     return list;
 }
 
+// функция сортировки вставками
 void insert_sort(int* arr, int low, int high) {
     int i, key, j;
     for(i = low + 1; i < high; i++) {
@@ -48,6 +54,7 @@ void insert_sort(int* arr, int low, int high) {
     }
 }
 
+// функция подсчета элементов в списке
 int count_element_general_list(primary_list *list) {
     int count = 0;
     while (list->primary_next != NULL) {
@@ -58,6 +65,7 @@ int count_element_general_list(primary_list *list) {
     return count;
 }
 
+// функция добавления элемента в подсписок списка
 primary_list *add_element_index_to_under_list(primary_list* general_list, int index, int data_of_array) {
     if (index <= count_element_general_list(general_list)) {
         int count = 0;
@@ -88,6 +96,7 @@ primary_list *add_element_index_to_under_list(primary_list* general_list, int in
     return general_list;
 }
 
+// функция печати списка
 void print_general_list(primary_list* list) {
     if (list == NULL)
         return;
@@ -98,6 +107,7 @@ void print_general_list(primary_list* list) {
     printf("%d\n", list->primary_data);
 }
 
+// функция печати подсписка
 void print_under_list(primary_list* list, int index) {
     if (list == NULL)
         return;
@@ -112,6 +122,7 @@ void print_under_list(primary_list* list, int index) {
     }
 }
 
+// функция печати списка списков
 void print_together_lists(primary_list *list) {
     if (list == NULL)
         return;
@@ -138,12 +149,14 @@ void print_together_lists(primary_list *list) {
     printf("\n");
 }
 
+// хеш функция методом умножения
 int hash_function(int key) {
     int N = 10;
     double A = 0.6180339887;
     return N * fmod(key * A, 1);
 }
 
+// функция хеширования методом цепочек
 primary_list *hash_chain(primary_list *list, int *arr, int *unique_arr, int size, int unique_arr_size) {
     if (list == NULL)
         list = create_list(unique_arr[0]);
@@ -163,6 +176,7 @@ primary_list *hash_chain(primary_list *list, int *arr, int *unique_arr, int size
     return list;
 }
 
+// функция для нахождения уникальных хеш значений
 int *unique_hashes(int* arr, int size, int *size_last_arr) {
     int size_new_arr = 0, k = 0, f = 0;
     int *tmp_arr = malloc(size * sizeof(int));
@@ -215,10 +229,7 @@ int *unique_hashes(int* arr, int size, int *size_last_arr) {
     return last_arr;
 }
 
-int extra_hash_function(int key) {
-    return (key % SIZE);
-}
-
+// главный метод
 int main(int argc, char* argv[]) {
     primary_list *list = NULL;
     int *arr = malloc(SIZE * sizeof(int));

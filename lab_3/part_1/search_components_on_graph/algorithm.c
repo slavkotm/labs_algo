@@ -1,29 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// количество вершин графа
 #define SIZE 4
 
+// создание структуры очереди
 struct queue {
     int items[SIZE];
     int front;
     int rear;
 };
 
+// функция создания очереди
 struct queue* createQueue();
+// функция добавления элемента в очередь
 void enqueue(struct queue* q, int);
+// функция удаления элемента из очереди
 int dequeue(struct queue* q);
+// функция вывода очереди
 void display(struct queue* q);
+// функция проверки очереди на отсутствие в ней элементов
 int isEmpty(struct queue* q);
+// печать очереди в консоль
 void printQueue(struct queue* q);
 
+// структура для создания вершины
 struct node
 {
     int vertex;
     struct node* next;
 };
 
+// функция создания вершины
 struct node* createNode(int);
 
+// структура создания графа
 struct Graph
 {
     int numVertices;
@@ -31,14 +42,21 @@ struct Graph
     int* visited;
 };
 
+// функция для создания графа
 struct Graph* createGraph(int vertices);
+// функция добавления ребра в граф
 void addEdge(struct Graph* graph, int src, int dest);
+// функция печати графа в консоль
 void printGraph(struct Graph* graph);
+// функция поиска в ширину
 void bfs(struct Graph* graph, int startVertex);
 
+// главный метод
 int main()
 {
-    struct Graph* graph = createGraph(6);
+    // создание графа на 5 вершин
+    struct Graph* graph = createGraph(5);
+    // добавление ребер в граф
     addEdge(graph, 0, 1);
     addEdge(graph, 0, 2);
     addEdge(graph, 1, 2);
@@ -48,6 +66,7 @@ int main()
     addEdge(graph, 3, 4);
 
  
+    // поиск компонент связности
     bfs(graph, 0);
  
     return 0;
